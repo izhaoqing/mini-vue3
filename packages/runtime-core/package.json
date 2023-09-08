@@ -1,0 +1,7 @@
+{
+    "name": "@mini-vue3/runtime-core",
+    "version": "1.0.0",
+    "dependencies": {
+        "@mini-vue3/reactivity": "workspace:^1.0.0"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name": "mini-vue3",
+    "version": "1.0.0",
+    "main": "index.js",
+    "dependencies": {
+        "@mini-vue3/runtime-core": "workspace:^1.0.0",
+        "@mini-vue3/reactivity": "workspace:^1.0.0"
+    }
+}
