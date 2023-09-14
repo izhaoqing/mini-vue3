@@ -11,9 +11,13 @@ class ReactiveEffect {
         this._fn = fn;
     }
     run() {
+        if(!this.active) {
+            return this._fn();
+        }
         activeEffect = this;
-        this._fn();
+        const result = this._fn();
         activeEffect = undefined;
+        return result;
     }
     stop() {
         if (this.active) {

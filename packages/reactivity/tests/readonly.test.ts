@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readonly, isReadonly } from '@mini-vue3/reactivity';
+import { readonly, isReadonly, shallowReadonly } from '@mini-vue3/reactivity';
 
 describe('readonly', () => {
     it('should make nested values readonly', () => {
@@ -11,6 +11,7 @@ describe('readonly', () => {
             arr: [{ qux: 3 }],
         };
         const wrapped = readonly(original);
+        expect(wrapped).not.toBe(original);
         expect(isReadonly(wrapped)).toBe(true);
         expect(isReadonly(original)).toBe(false);
         expect(isReadonly(wrapped.bar)).toBe(true);
@@ -33,11 +34,11 @@ describe('readonly', () => {
                 baz: 2,
             },
         };
-        const wrapped = readonly(original);
+        const wrapped = shallowReadonly(original);
         expect(isReadonly(wrapped)).toBe(true);
         expect(isReadonly(original)).toBe(false);
-        expect(isReadonly(wrapped.bar)).toBe(true);
-        expect(isReadonly(original.bar)).toBe(false);
+        expect(isReadonly(wrapped.foo)).toBe(false);
+        expect(isReadonly(original.foo)).toBe(false);
         expect(isReadonly(wrapped.bar.baz)).toBe(false);
         wrapped.foo++;
         expect(wrapped.foo).toBe(1);
