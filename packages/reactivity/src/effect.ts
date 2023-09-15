@@ -50,7 +50,7 @@ export const stop = (runner: any) => {
 
 const targetMap = new WeakMap<object, Map<string, Set<ReactiveEffect>>>();
 export const track = (target: object, type: string, key: string) => {
-    if (!activeEffect) return;
+    if (!isTracking()) return;
     // console.log(`触发 track -> target: ${target} type:${type} key:${key}`);
     let depsMap = targetMap.get(target);
     if (!depsMap) {
@@ -60,13 +60,10 @@ export const track = (target: object, type: string, key: string) => {
     if (!dep) {
         depsMap.set(key, (dep = new Set()));
     }
-    if (!dep.has(activeEffect)) {
-        dep.add(activeEffect);
-        activeEffect.deps.push(dep);
-    }
+    trackEffect(dep);
 };
 
-const triggerEffects = (effects: Set<ReactiveEffect>) => {
+export const triggerEffects = (effects: Set<ReactiveEffect>) => {
     for(const effect of effects) {
         if (effect.scheduler) {
             effect.scheduler();
@@ -82,5 +79,16 @@ export const trigger = (target, type, key) => {
     const deps = depsMap?.get(key);
     if (deps) {
         triggerEffects(deps);
+    }
+};
+
+export const isTracking = () => {
+    return activeEffect !== undefined;
+};
+
+export const trackEffect = (dep) => {
+    if (!dep.has(activeEffect)) {
+        dep.add(activeEffect);
+        activeEffect?.deps.push(dep);
     }
 };
